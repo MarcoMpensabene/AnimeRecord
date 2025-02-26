@@ -9,7 +9,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-
+Route::middleware(['admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+});
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
