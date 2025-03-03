@@ -4,10 +4,21 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Controllers\AnimeController;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+// Gruppo di rotte per gli Anime
+Route::prefix('anime')->group(function () {
+    Route::get('/', [AnimeController::class, 'index'])->name('anime.index'); // Mostra tutti gli anime salvati
+    Route::get('/fetch/{mal_id}', [AnimeController::class, 'fetchAnime'])->name('anime.fetch'); // Recupera da Jikan e salva nel DB
+
+    Route::middleware(['auth'])->group(function () { // Protegge modifiche/eliminazioni
+        Route::delete('/{id}', [AnimeController::class, 'destroy'])->name('anime.destroy'); // Elimina anime
+    });
+});
 
 Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
