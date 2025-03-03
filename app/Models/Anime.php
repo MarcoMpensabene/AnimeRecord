@@ -1,5 +1,7 @@
 <?php
 
+// App\Models\Anime.php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,6 +11,7 @@ class Anime extends Model
 {
     use HasFactory;
 
+    // Aggiungi i nuovi campi alla proprietà $fillable
     protected $fillable = [
         'mal_id',
         'title',
@@ -16,5 +19,9 @@ class Anime extends Model
         'image_url',
         'episodes',
         'status',
+        'airing',
+        'rating',
+        'score',
+        'year'
     ];
 }

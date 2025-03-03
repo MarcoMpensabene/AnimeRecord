@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('mal_id')->unique();
             $table->string('title');
-            $table->string('synopsis')->nullable();
+            $table->longText('synopsis')->nullable();
             $table->string('image_url')->nullable();
             $table->integer('episodes')->nullable();
             $table->string('status')->nullable();
