@@ -10,10 +10,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// Gruppo di rotte per gli Anime
+// 🔹 Gruppo di rotte per gli Anime
 Route::prefix('anime')->group(function () {
-    Route::get('/', [AnimeController::class, 'index'])->name('anime.index'); // Mostra tutti gli anime salvati
-    Route::get('/fetch/{mal_id}', [AnimeController::class, 'fetchAnime'])->name('anime.fetch'); // Recupera da Jikan e salva nel DB
+    Route::get('/', [AnimeController::class, 'index'])->name('anime.index'); // Mostra tutti gli anime con paginazione
+    Route::get('/{id}', [AnimeController::class, 'show'])->name('anime.show'); // Mostra un singolo anime
+    Route::get('/fetch/{mal_id}', [AnimeController::class, 'fetchAnime'])->name('anime.fetch'); // Recupera e salva da Jikan
 
     Route::middleware(['auth'])->group(function () { // Protegge modifiche/eliminazioni
         Route::delete('/{id}', [AnimeController::class, 'destroy'])->name('anime.destroy'); // Elimina anime

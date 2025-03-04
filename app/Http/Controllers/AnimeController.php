@@ -9,51 +9,65 @@ use Illuminate\Support\Facades\Log;
 
 class AnimeController extends Controller
 {
-    // Funzione per recuperare tutti gli anime dal DB
-    public function index()
+    // 🔹 Recupera tutti gli anime con paginazione
+    public function index(Request $request)
     {
         try {
-            $animes = Anime::all();  // Ottieni tutti gli anime
-            if ($animes->isEmpty()) {
-                return response()->json(['message' => 'No anime found'], 404);  // Se non ci sono anime nel DB
+            $perPage = 10; // Numero di anime per pagina
+            $animes = Anime::paginate($perPage);
+
+            if ($request->wantsJson()) {
+                // Se la richiesta è API, restituisci JSON
+                return response()->json($animes);
             }
-            return response()->json($animes);  // Restituisci la lista degli anime
+
+            // Se la richiesta è una normale visita al sito, restituisci la view
+            return view('anime.index', compact('animes'));
         } catch (\Exception $e) {
             Log::error('Errore nel recupero degli anime: ' . $e->getMessage());
             return response()->json(['error' => 'Error fetching anime list'], 500);
         }
     }
 
-    // Funzione per recuperare dati da Jikan e salvarli nel DB
+
+    // 🔹 Recupera un singolo anime dal DB
+    public function show($id)
+    {
+        $anime = Anime::find($id);
+
+        if (!$anime) {
+            return response()->json(['error' => 'Anime not found'], 404);
+        }
+
+        return response()->json($anime);
+    }
+
+    // 🔹 Recupera i dati da Jikan e li salva nel DB
     public function fetchAnime($mal_id)
     {
         try {
-            // Recupera i dati da Jikan
             $response = Http::withoutVerifying()->get("https://api.jikan.moe/v4/anime/{$mal_id}");
 
-            // Verifica se la risposta è stata ricevuta con successo
             if ($response->successful()) {
-                $data = $response->json()['data']; // Accede ai dati
+                $data = $response->json()['data'];
 
-                // Verifica che 'mal_id' sia presente nei dati
                 if (!isset($data['mal_id'])) {
                     return response()->json(['error' => 'mal_id not found in data'], 400);
                 }
 
-                // Estrai i valori necessari
+                // Salva o aggiorna l'anime
                 $anime = Anime::updateOrCreate(
                     ['mal_id' => $data['mal_id']],
                     [
-                        'title' => $data['title'], // Titolo principale
-                        'synopsis' => $data['synopsis'] ?? null, // Sinossi
-                        'image_url' => $data['images']['jpg']['image_url'] ?? null, // URL immagine
-                        'episodes' => $data['episodes'] ?? null, // Numero episodi
-                        'status' => $data['status'] ?? null, // Stato (e.g. "Finished Airing")
-                        'airing' => $data['airing'] ?? null, // Se è ancora in onda
-                        'rating' => $data['rating'] ?? null, // Rating
-                        'score' => $data['score'] ?? null, // Punteggio
-                        'synopsis' => $data['synopsis'] ?? null, // Sinossi
-                        'year' => $data['year'] ?? null // Anno
+                        'title' => $data['title'],
+                        'synopsis' => $data['synopsis'] ?? null,
+                        'image_url' => $data['images']['jpg']['image_url'] ?? null,
+                        'episodes' => $data['episodes'] ?? null,
+                        'status' => $data['status'] ?? null,
+                        'airing' => $data['airing'] ?? null,
+                        'rating' => $data['rating'] ?? null,
+                        'score' => $data['score'] ?? null,
+                        'year' => $data['year'] ?? null
                     ]
                 );
 
@@ -62,18 +76,83 @@ class AnimeController extends Controller
 
             return response()->json(['error' => 'Anime not found'], 404);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            Log::error('Errore nel fetch dell’anime: ' . $e->getMessage());
+            return response()->json(['error' => 'Error fetching anime'], 500);
         }
     }
 
-    // Elimina un anime dal DB
+    // 🔹 Crea un nuovo anime manualmente
+    public function store(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'mal_id' => 'required|integer|unique:animes,mal_id',
+                'title' => 'required|string|max:255',
+                'synopsis' => 'nullable|string',
+                'image_url' => 'nullable|url',
+                'episodes' => 'nullable|integer',
+                'status' => 'nullable|string',
+                'airing' => 'nullable|boolean',
+                'rating' => 'nullable|string',
+                'score' => 'nullable|numeric|min:0|max:10',
+                'year' => 'nullable|integer'
+            ]);
+
+            $anime = Anime::create($validated);
+
+            return response()->json($anime, 201);
+        } catch (\Exception $e) {
+            Log::error('Errore nella creazione dell’anime: ' . $e->getMessage());
+            return response()->json(['error' => 'Error creating anime'], 500);
+        }
+    }
+
+    // 🔹 Aggiorna un anime esistente
+    public function update(Request $request, $id)
+    {
+        try {
+            $anime = Anime::find($id);
+
+            if (!$anime) {
+                return response()->json(['error' => 'Anime not found'], 404);
+            }
+
+            $validated = $request->validate([
+                'title' => 'sometimes|string|max:255',
+                'synopsis' => 'sometimes|nullable|string',
+                'image_url' => 'sometimes|nullable|url',
+                'episodes' => 'sometimes|nullable|integer',
+                'status' => 'sometimes|nullable|string',
+                'airing' => 'sometimes|nullable|boolean',
+                'rating' => 'sometimes|nullable|string',
+                'score' => 'sometimes|nullable|numeric|min:0|max:10',
+                'year' => 'sometimes|nullable|integer'
+            ]);
+
+            $anime->update($validated);
+
+            return response()->json($anime);
+        } catch (\Exception $e) {
+            Log::error('Errore nell’aggiornamento dell’anime: ' . $e->getMessage());
+            return response()->json(['error' => 'Error updating anime'], 500);
+        }
+    }
+
+    // 🔹 Elimina un anime dal DB
     public function destroy($id)
     {
-        $anime = Anime::find($id);
-        if ($anime) {
+        try {
+            $anime = Anime::find($id);
+
+            if (!$anime) {
+                return response()->json(['error' => 'Anime not found'], 404);
+            }
+
             $anime->delete();
-            return response()->json(['message' => 'Anime deleted']);
+            return response()->json(['message' => 'Anime deleted successfully']);
+        } catch (\Exception $e) {
+            Log::error('Errore nell’eliminazione dell’anime: ' . $e->getMessage());
+            return response()->json(['error' => 'Error deleting anime'], 500);
         }
-        return response()->json(['error' => 'Anime not found'], 404);
     }
 }
