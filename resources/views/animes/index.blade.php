@@ -7,5 +7,6 @@
         <h1 class="text-3xl font-bold mb-6">Lista degli Anime</h1>
 
         @livewire('anime-list') <!-- Includiamo il componente Livewire -->
+
     </div>
 @endsection

@@ -10,23 +10,25 @@ use Illuminate\Support\Facades\Log;
 class AnimeController extends Controller
 {
     // 🔹 Recupera tutti gli anime con paginazione
-    public function index(Request $request)
+    public function index()
     {
-        try {
-            $perPage = 10; // Numero di anime per pagina
-            $animes = Anime::paginate($perPage);
+        // try {
+        //     $perPage = 10; // Numero di anime per pagina
+        //     $animes = Anime::paginate($perPage);
 
-            if ($request->wantsJson()) {
-                // Se la richiesta è API, restituisci JSON
-                return response()->json($animes);
-            }
+        //     if ($request->wantsJson()) {
+        //         // Se la richiesta è API, restituisci JSON
+        //         return response()->json($animes);
+        //     }
 
-            // Se la richiesta è una normale visita al sito, restituisci la view
-            return view('anime.index', compact('animes'));
-        } catch (\Exception $e) {
-            Log::error('Errore nel recupero degli anime: ' . $e->getMessage());
-            return response()->json(['error' => 'Error fetching anime list'], 500);
-        }
+        //     // Se la richiesta è una normale visita al sito, restituisci la view
+        //     return view('anime.index', compact('animes'));
+        // } catch (\Exception $e) {
+        //     Log::error('Errore nel recupero degli anime: ' . $e->getMessage());
+        //     return response()->json(['error' => 'Error fetching anime list'], 500);
+        // }
+        // $animes = Anime::paginate(12);
+        // return view('animes.index', compact('animes'));
     }
 
 
