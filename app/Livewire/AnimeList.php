@@ -10,7 +10,7 @@ use App\Models\Anime;
 class AnimeList extends Component
 {
     use WithPagination;
-
+    public $test = "test";
     public $search = ''; // Campo di ricerca
     protected $paginationTheme = 'tailwind'; // Usa il tema Tailwind per la paginazione
     public function updatingSearch()
@@ -20,13 +20,11 @@ class AnimeList extends Component
 
     public function render()
     {
-        // Query animes with search functionality if needed
-        $animes = Anime::when($this->search, function ($query) {
-            return $query->where('title', 'like', '%' . $this->search . '%');
-        })->paginate(9); // Use paginate instead of all()
-
-        return view('livewire.anime-list', [
-            'animes' => $animes // Correctly pass the paginated results
-        ]);
+        // dd("Component is rendering");
+        // // Query animes with search functionality if needed
+        // $animeData = Anime::when($this->search, function ($query) {
+        //     return $query->where('title', 'like', '%' . $this->search . '%');
+        // })->paginate(9); // Use paginate instead of all()
+        return view('livewire.anime-list', ['test']);
     }
 }

@@ -11,10 +11,11 @@
 </head>
 
 <body>
+
     <nav class="navbar navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">Anime Records</a>
-            <a class="btn btn-outline-light" href="{{ route('animes.index') }}">Lista Anime</a>
+            {{-- <a class="btn btn-outline-light" href="{{ route('animes.index') }}">Lista Anime</a> --}}
         </div>
     </nav>
 
