@@ -14,6 +14,7 @@ Route::get('/', function () {
 // 🔹 Gruppo di rotte per gli Anime
 Route::prefix('animes')->group(function () {
     // Route::get('/', [AnimeController::class, 'index'])->name('animes.index'); // Mostra tutti gli anime con paginazione
+
     Route::get('/', function () {
         return view('animes.index'); // Renderizza la vista Blade che contiene il componente Livewire
     });
