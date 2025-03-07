@@ -10,25 +10,23 @@ use Illuminate\Support\Facades\Log;
 class AnimeController extends Controller
 {
     // 🔹 Recupera tutti gli anime con paginazione
-    public function index()
+    public function index(Request $request)
     {
-        // try {
-        //     $perPage = 10; // Numero di anime per pagina
-        //     $animes = Anime::paginate($perPage);
+        try {
+            $perPage = 10; // Numero di anime per pagina
+            $animeData = Anime::paginate($perPage);
 
-        //     if ($request->wantsJson()) {
-        //         // Se la richiesta è API, restituisci JSON
-        //         return response()->json($animes);
-        //     }
+            if ($request->wantsJson()) {
+                //         // Se la richiesta è API, restituisci JSON
+                return response()->json($animeData);
+            }
 
-        //     // Se la richiesta è una normale visita al sito, restituisci la view
-        //     return view('anime.index', compact('animes'));
-        // } catch (\Exception $e) {
-        //     Log::error('Errore nel recupero degli anime: ' . $e->getMessage());
-        //     return response()->json(['error' => 'Error fetching anime list'], 500);
-        // }
-        $animeData = Anime::all();
-        return view('animes.index', compact('animeData'));
+            //     // Se la richiesta è una normale visita al sito, restituisci la view
+            return view('animes.index', compact('animeData'));
+        } catch (\Exception $e) {
+            Log::error("Errore nel recupero degli anime: " . $e->getMessage());
+            return response()->json(['error' => 'Error fetching anime list'], 500);
+        }
     }
 
 
@@ -78,7 +76,7 @@ class AnimeController extends Controller
 
             return response()->json(['error' => 'Anime not found'], 404);
         } catch (\Exception $e) {
-            Log::error('Errore nel fetch dell’anime: ' . $e->getMessage());
+            Log::error("Errore nel fetch dell'anime: " . $e->getMessage());
             return response()->json(['error' => 'Error fetching anime'], 500);
         }
     }
@@ -104,7 +102,7 @@ class AnimeController extends Controller
 
             return response()->json($anime, 201);
         } catch (\Exception $e) {
-            Log::error('Errore nella creazione dell’anime: ' . $e->getMessage());
+            Log::error("Errore nella creazione dell'anime: " . $e->getMessage());
             return response()->json(['error' => 'Error creating anime'], 500);
         }
     }
@@ -135,7 +133,7 @@ class AnimeController extends Controller
 
             return response()->json($anime);
         } catch (\Exception $e) {
-            Log::error('Errore nell’aggiornamento dell’anime: ' . $e->getMessage());
+            Log::error("Errore nell'aggiornamento dell'anime: " . $e->getMessage());
             return response()->json(['error' => 'Error updating anime'], 500);
         }
     }
@@ -153,7 +151,7 @@ class AnimeController extends Controller
             $anime->delete();
             return response()->json(['message' => 'Anime deleted successfully']);
         } catch (\Exception $e) {
-            Log::error('Errore nell’eliminazione dell’anime: ' . $e->getMessage());
+            Log::error("Errore nell'eliminazione dell'anime: " . $e->getMessage());
             return response()->json(['error' => 'Error deleting anime'], 500);
         }
     }

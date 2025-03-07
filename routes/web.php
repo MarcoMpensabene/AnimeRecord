@@ -5,7 +5,7 @@ use Livewire\Volt\Volt;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\AnimeController;
-use App\Http\Livewire\AnimeList;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -13,11 +13,7 @@ Route::get('/', function () {
 
 // 🔹 Gruppo di rotte per gli Anime
 Route::prefix('animes')->group(function () {
-    // Route::get('/', [AnimeController::class, 'index'])->name('animes.index'); // Mostra tutti gli anime con paginazione
-
-    Route::get('/', function () {
-        return view('animes.index'); // Renderizza la vista Blade che contiene il componente Livewire
-    });
+    Route::get('/', [AnimeController::class, 'index'])->name('animes.index'); // Mostra tutti gli anime con paginazione
     Route::get('/{id}', [AnimeController::class, 'show'])->name('animes.show'); // Mostra un singolo anime
     Route::get('/fetch/{mal_id}', [AnimeController::class, 'fetchAnime'])->name('animes.fetch'); // Recupera e salva da Jikan
 
