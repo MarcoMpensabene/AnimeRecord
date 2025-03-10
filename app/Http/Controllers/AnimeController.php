@@ -33,51 +33,82 @@ class AnimeController extends Controller
     // 🔹 Recupera un singolo anime dal DB
     public function show($id)
     {
-        $anime = Anime::find($id);
+        try {
+            $anime = Anime::findOrFail($id);
 
-        if (!$anime) {
-            return response()->json(['error' => 'Anime not found'], 404);
+            if ($anime) {
+                return view('animes.show', compact('anime'));
+            }
+
+            return redirect()->route('animes.index')
+                ->with('error', 'Anime not found');
+        } catch (\Exception $e) {
+            Log::error("Error retrieving anime details: " . $e->getMessage());
+            return redirect()->route('animes.index')
+                ->with('error', 'Error retrieving anime details');
         }
-
-        return response()->json($anime);
     }
 
     // 🔹 Recupera i dati da Jikan e li salva nel DB
-    public function fetchAnime($mal_id)
+    public function fetchAnime()
     {
         try {
-            $response = Http::withoutVerifying()->get("https://api.jikan.moe/v4/anime/{$mal_id}");
+            // Get total pages from initial request
+            $initialResponse = Http::withoutVerifying()->get("https://api.jikan.moe/v4/anime");
 
-            if ($response->successful()) {
-                $data = $response->json()['data'];
-
-                if (!isset($data['mal_id'])) {
-                    return response()->json(['error' => 'mal_id not found in data'], 400);
-                }
-
-                // Salva o aggiorna l'anime
-                $anime = Anime::updateOrCreate(
-                    ['mal_id' => $data['mal_id']],
-                    [
-                        'title' => $data['title'],
-                        'synopsis' => $data['synopsis'] ?? null,
-                        'image_url' => $data['images']['jpg']['image_url'] ?? null,
-                        'episodes' => $data['episodes'] ?? null,
-                        'status' => $data['status'] ?? null,
-                        'airing' => $data['airing'] ?? null,
-                        'rating' => $data['rating'] ?? null,
-                        'score' => $data['score'] ?? null,
-                        'year' => $data['year'] ?? null
-                    ]
-                );
-
-                return response()->json($anime);
+            if (!$initialResponse->successful()) {
+                throw new \Exception("Failed to get initial anime data");
             }
 
-            return response()->json(['error' => 'Anime not found'], 404);
+            $pagination = $initialResponse->json()['pagination'];
+            $totalPages = $pagination['last_visible_page'];
+
+            // Process each page
+            for ($page = 1; $page <= $totalPages; $page++) {
+                try {
+                    // Rate limiting - Jikan API requires 1 second between requests
+                    sleep(1);
+
+                    $response = Http::withoutVerifying()->get("https://api.jikan.moe/v4/anime?page={$page}");
+
+                    if ($response->successful()) {
+                        $animeList = $response->json()['data'];
+
+                        foreach ($animeList as $data) {
+                            if (!isset($data['mal_id'])) {
+                                Log::warning("mal_id not found for anime on page {$page}");
+                                continue;
+                            }
+
+                            // Salva o aggiorna l'anime
+                            Anime::updateOrCreate(
+                                ['mal_id' => $data['mal_id']],
+                                [
+                                    'title' => $data['title'],
+                                    'synopsis' => $data['synopsis'] ?? null,
+                                    'image_url' => $data['images']['jpg']['image_url'] ?? null,
+                                    'episodes' => $data['episodes'] ?? null,
+                                    'status' => $data['status'] ?? null,
+                                    'airing' => $data['airing'] ?? null,
+                                    'rating' => $data['rating'] ?? null,
+                                    'score' => $data['score'] ?? null,
+                                    'year' => $data['year'] ?? null
+                                ]
+                            );
+                        }
+
+                        Log::info("Processed page {$page} of {$totalPages}");
+                    }
+                } catch (\Exception $e) {
+                    Log::error("Error processing page {$page}: " . $e->getMessage());
+                    continue;
+                }
+            }
+
+            return response()->json(['message' => 'Anime database updated successfully']);
         } catch (\Exception $e) {
-            Log::error("Errore nel fetch dell'anime: " . $e->getMessage());
-            return response()->json(['error' => 'Error fetching anime'], 500);
+            Log::error("Error in fetchAnime: " . $e->getMessage());
+            return response()->json(['error' => 'Error fetching anime data'], 500);
         }
     }
 

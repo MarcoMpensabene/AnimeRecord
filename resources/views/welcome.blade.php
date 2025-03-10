@@ -15,7 +15,11 @@
 <body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white flex flex-col items-center min-h-screen">
     <header class="w-full p-4 flex justify-between items-center bg-white dark:bg-gray-800 shadow">
         <h1 class="text-xl font-bold">AnimeRecord</h1>
+        <a href="{{ route('animes.index') }}"
+            class="flex px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Anime
+            List</a>
         <nav>
+
             @if (Route::has('login'))
                 <div class="flex space-x-4">
                     @auth
