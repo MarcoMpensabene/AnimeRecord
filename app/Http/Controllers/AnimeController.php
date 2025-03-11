@@ -106,6 +106,9 @@ class AnimeController extends Controller
                                 continue;
                             }
 
+                            // Extract genre names from the API response
+                            $genres = collect($data['genres'] ?? [])->pluck('name')->toArray();
+
                             // Salva o aggiorna l'anime
                             Anime::updateOrCreate(
                                 ['mal_id' => $data['mal_id']],
@@ -118,7 +121,8 @@ class AnimeController extends Controller
                                     'airing' => $data['airing'] ?? null,
                                     'rating' => $data['rating'] ?? null,
                                     'score' => $data['score'] ?? null,
-                                    'year' => $data['year'] ?? null
+                                    'year' => $data['year'] ?? null,
+                                    'genres' => $genres // Now properly storing array of genre names
                                 ]
                             );
                         }
