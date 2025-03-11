@@ -55,14 +55,8 @@
 
                     <div class="flex space-x-4">
                         <a href="{{ route('animes.index') }}"
-                            class="px-6 py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors duration-200 shadow-md hover:shadow-lg">
+                            class="px-6 py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors duration-200 shadow-md hover:shadow-lg ">
                             Back to List
-                        </a>
-                        <button type="button"
-                            class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Purple</button>
-                        <a href="{{ route('animes.index') }}"
-                            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
-                            Return to Index
                         </a>
                     </div>
                 </div>
