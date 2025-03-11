@@ -13,16 +13,42 @@ class AnimeController extends Controller
     public function index(Request $request)
     {
         try {
-            $perPage = 10; // Numero di anime per pagina
-            $animeData = Anime::paginate($perPage);
+            $query = Anime::query();
+
+            // Filter by year if provided
+            if ($request->has('year') && $request->year !== '') {
+                $query->where('year', $request->year);
+            }
+
+            // Filter by genre if provided
+            if ($request->has('genre') && $request->genre !== '') {
+                $query->where('genres', 'like', '%' . $request->genre . '%');
+            }
+
+            $perPage = 10;
+            $animeData = $query->paginate($perPage);
+
+            // Get unique years for the filter dropdown
+            $years = Anime::whereNotNull('year')
+                ->distinct()
+                ->pluck('year')
+                ->sort()
+                ->values();
+
+            // Get unique genres for the filter dropdown
+            $genres = Anime::whereNotNull('genres')
+                ->distinct()
+                ->pluck('genres')
+                ->flatten()
+                ->unique()
+                ->sort()
+                ->values();
 
             if ($request->wantsJson()) {
-                //         // Se la richiesta è API, restituisci JSON
                 return response()->json($animeData);
             }
 
-            //     // Se la richiesta è una normale visita al sito, restituisci la view
-            return view('animes.index', compact('animeData'));
+            return view('animes.index', compact('animeData', 'years', 'genres'));
         } catch (\Exception $e) {
             Log::error("Errore nel recupero degli anime: " . $e->getMessage());
             return response()->json(['error' => 'Error fetching anime list'], 500);
@@ -184,6 +210,21 @@ class AnimeController extends Controller
         } catch (\Exception $e) {
             Log::error("Errore nell'eliminazione dell'anime: " . $e->getMessage());
             return response()->json(['error' => 'Error deleting anime'], 500);
+        }
+    }
+
+    // 🔹 Mostra la pagina di ricerca
+    public function search()
+    {
+        try {
+            $years = Anime::distinct()->pluck('year')->sort()->values();
+            $genres = Anime::distinct()->pluck('genres')->flatten()->unique()->sort()->values();
+
+            return view('animes.search', compact('years', 'genres'));
+        } catch (\Exception $e) {
+            Log::error("Error loading search page: " . $e->getMessage());
+            return redirect()->route('animes.index')
+                ->with('error', 'Error loading search page');
         }
     }
 }

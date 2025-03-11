@@ -22,6 +22,14 @@ class Anime extends Model
         'airing',
         'rating',
         'score',
-        'year'
+        'year',
+        'genres'
+    ];
+
+    protected $casts = [
+        'airing' => 'boolean',
+        'score' => 'float',
+        'year' => 'integer',
+        'genres' => 'array'
     ];
 }
