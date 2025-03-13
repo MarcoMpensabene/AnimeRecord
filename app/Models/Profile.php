@@ -13,17 +13,14 @@ class Profile extends Model
         'user_id',
         'username',
         'description',
-        'avatar',
-        'favorite_characters',
-        'last_online'
+        'favorite_characters'
     ];
 
     protected $casts = [
-        'favorite_characters' => 'array',
-        'last_online' => 'datetime',
+        'favorite_characters' => 'array'
     ];
 
-    public function user() //1to1 relation with user
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

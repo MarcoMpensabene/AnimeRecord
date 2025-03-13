@@ -61,9 +61,12 @@
                                     <a href="{{ route('dashboard') }}"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                         role="menuitem">Dashboard</a>
-                                    <a href="{{ route('settings.profile') }}"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                        role="menuitem">Settings</a>
+                                    <a href="{{ route('profiles.show') }}"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">My
+                                        Profile</a>
+                                    <a href="{{ route('profiles.edit') }}"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Edit
+                                        Profile</a>
                                 </div>
                                 <div class="py-1" role="none">
                                     <form method="POST" action="{{ route('logout') }}">

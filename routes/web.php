@@ -5,6 +5,7 @@ use Livewire\Volt\Volt;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\AnimeController;
+use App\Http\Controllers\ProfileController;
 
 
 Route::get('/', function () {
@@ -37,6 +38,12 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
     Volt::route('settings/password', 'settings.password')->name('settings.password');
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
+
+    // Profile Routes
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profiles.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profiles.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profiles.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profiles.destroy');
 });
 
 
