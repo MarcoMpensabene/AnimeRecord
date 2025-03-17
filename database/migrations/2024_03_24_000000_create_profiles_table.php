@@ -6,27 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Collegamento con users
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('username')->unique();
             $table->text('description')->nullable();
-            $table->string('avatar')->nullable(); // Percorso immagine
-            $table->json('favorite_characters')->nullable(); // Array JSON di ID
-            $table->timestamp('last_online')->nullable();
+            $table->json('favorite_characters')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('profiles');
     }
