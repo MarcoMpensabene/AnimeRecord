@@ -14,17 +14,18 @@ class SeasonalAnimeController extends Controller
     {
         $now = Carbon::now();
         $month = $now->month;
+        $day = $now->day;
 
         // Winter: January 1 - March 31
-        if ($month >= 1 && $month <= 3) {
+        if (($month == 1) || ($month == 2) || ($month == 3)) {
             return 'winter';
         }
         // Spring: April 1 - June 30
-        elseif ($month >= 4 && $month <= 6) {
+        elseif (($month == 4) || ($month == 5) || ($month == 6)) {
             return 'spring';
         }
         // Summer: July 1 - September 30
-        elseif ($month >= 7 && $month <= 9) {
+        elseif (($month == 7) || ($month == 8) || ($month == 9)) {
             return 'summer';
         }
         // Fall: October 1 - December 31
@@ -36,15 +37,7 @@ class SeasonalAnimeController extends Controller
     public function getCurrentYear()
     {
         $now = Carbon::now();
-        $month = $now->month;
-        $year = $now->year;
-
-        // Se siamo tra gennaio e marzo, usiamo l'anno precedente per l'inverno
-        if ($month <= 3) {
-            return $year - 1;
-        }
-
-        return $year;
+        return $now->year;
     }
 
     public function getSeasonalAnime()
@@ -59,7 +52,7 @@ class SeasonalAnimeController extends Controller
 
             if ($response->successful()) {
                 $animeList = collect($response->json()['data'])
-                    ->take(10) // Limit to 10 anime
+                    ->take(50) // Limit to 20 anime
                     ->map(function ($anime) {
                         return [
                             'mal_id' => $anime['mal_id'],
