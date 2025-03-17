@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\AnimeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SeasonalAnimeController;
 
 
 Route::get('/', function () {
@@ -45,6 +46,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profiles.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profiles.destroy');
 });
+
+Route::get('/seasonal-anime', [SeasonalAnimeController::class, 'getSeasonalAnime'])->name('seasonal.anime');
 
 
 

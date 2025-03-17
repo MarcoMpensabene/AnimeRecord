@@ -218,17 +218,45 @@ class AnimeController extends Controller
     }
 
     // 🔹 Mostra la pagina di ricerca
-    public function search()
+    public function search(Request $request)
     {
         try {
-            $years = Anime::distinct()->pluck('year')->sort()->values();
-            $genres = Anime::distinct()->pluck('genres')->flatten()->unique()->sort()->values();
+            $query = Anime::query();
 
-            return view('animes.search', compact('years', 'genres'));
+            // Filter by year if provided
+            if ($request->has('year') && $request->year !== '') {
+                $query->where('year', $request->year);
+            }
+
+            // Filter by genre if provided
+            if ($request->has('genre') && $request->genre !== '') {
+                $query->where('genres', 'like', '%' . $request->genre . '%');
+            }
+
+            $perPage = 10;
+            $animeData = $query->paginate($perPage);
+
+            // Get unique years for the filter dropdown
+            $years = Anime::whereNotNull('year')
+                ->distinct()
+                ->pluck('year')
+                ->sort()
+                ->values();
+
+            // Get unique genres for the filter dropdown
+            $genres = Anime::whereNotNull('genres')
+                ->distinct()
+                ->pluck('genres')
+                ->flatten()
+                ->unique()
+                ->sort()
+                ->values();
+
+            return view('animes.search', compact('animeData', 'years', 'genres'));
         } catch (\Exception $e) {
-            Log::error("Error loading search page: " . $e->getMessage());
+            Log::error("Error in search: " . $e->getMessage());
             return redirect()->route('animes.index')
-                ->with('error', 'Error loading search page');
+                ->with('error', 'Error performing search');
         }
     }
 }

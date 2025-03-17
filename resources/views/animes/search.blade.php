@@ -7,7 +7,7 @@
         <div class="px-4 py-6 sm:px-0">
             <div class="bg-white rounded-lg shadow-sm p-6">
                 <!-- Search Form -->
-                <form action="{{ route('animes.index') }}" method="GET" class="space-y-4">
+                <form action="{{ route('animes.search') }}" method="GET" class="space-y-4">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">Search Anime</h2>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -82,7 +82,7 @@
 
                         <!-- Pagination -->
                         <div class="mt-6">
-                            {{ $animeData->links() }}
+                            {{ $animeData->appends(request()->query())->links() }}
                         </div>
                     </div>
                 @elseif(isset($animeData))
