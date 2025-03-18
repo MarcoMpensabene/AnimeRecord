@@ -16,13 +16,12 @@ class AnimeRecordController extends Controller
 
     public function index()
     {
-        $profile = Auth::user()->profile;
-        $watchingAnime = $profile->getAnimeList('watching');
-        $completedAnime = $profile->getAnimeList('completed');
-        $planToWatchAnime = $profile->getAnimeList('plan_to_watch');
-        $droppedAnime = $profile->getAnimeList('dropped');
+        $watchingAnime = Auth::user()->profile->animeRecords()->where('status', 'watching')->get();
+        $completedAnime = Auth::user()->profile->animeRecords()->where('status', 'completed')->get();
+        $planToWatchAnime = Auth::user()->profile->animeRecords()->where('status', 'plan_to_watch')->get();
+        $droppedAnime = Auth::user()->profile->animeRecords()->where('status', 'dropped')->get();
 
-        return view('anime-records.index', compact(
+        return view('animerecords.index', compact(
             'watchingAnime',
             'completedAnime',
             'planToWatchAnime',
