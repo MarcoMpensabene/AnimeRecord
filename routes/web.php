@@ -7,6 +7,7 @@ use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\AnimeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeasonalAnimeController;
+use App\Http\Controllers\AnimeRecordController;
 
 
 Route::get('/', function () {
@@ -45,6 +46,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profiles.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profiles.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profiles.destroy');
+
+    // Anime Record Routes
+    Route::get('/my-anime-list', [AnimeRecordController::class, 'index'])->name('animerecord.index');
+    Route::post('/my-anime-list', [AnimeRecordController::class, 'store'])->name('animerecord.store');
+    Route::put('/my-anime-list/{animeRecord}', [AnimeRecordController::class, 'update'])->name('animerecord.update');
+    Route::delete('/my-anime-list/{animeRecord}', [AnimeRecordController::class, 'destroy'])->name('animerecord.destroy');
 });
 
 Route::get('/seasonal-anime', [SeasonalAnimeController::class, 'getSeasonalAnime'])->name('seasonal.anime');
