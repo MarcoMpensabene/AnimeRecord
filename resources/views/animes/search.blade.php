@@ -60,24 +60,44 @@
                 @if (isset($animeData) && $animeData->count() > 0)
                     <div class="mt-8">
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Search Results</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            @foreach ($animeData as $anime)
-                                <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
-                                    @if ($anime->image_url)
-                                        <img src="{{ $anime->image_url }}" alt="{{ $anime->title }}"
-                                            class="w-full h-48 object-cover">
-                                    @endif
-                                    <div class="p-4">
-                                        <h4 class="text-lg font-semibold text-gray-900 mb-2">{{ $anime->title }}</h4>
-                                        <p class="text-sm text-gray-600 mb-2">Year: {{ $anime->year ?? 'N/A' }}</p>
-                                        <p class="text-sm text-gray-600 mb-4">Score: {{ $anime->score ?? 'N/A' }}</p>
-                                        <a href="{{ route('animes.show', $anime->id) }}"
-                                            class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
-                                            View Details →
-                                        </a>
-                                    </div>
-                                </div>
-                            @endforeach
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>MAL ID</th>
+                                        <th>Titolo</th>
+                                        <th>Sinossi</th>
+                                        <th>Immagine</th>
+                                        <th>Episodi</th>
+                                        <th>Status</th>
+                                        <th>In corso</th>
+                                        <th>Rating</th>
+                                        <th>Score</th>
+                                        <th>Anno</th>
+                                        <th>Azioni</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($animeData as $anime)
+                                        <tr>
+                                            <td>{{ $anime->mal_id }}</td>
+                                            <td>
+                                                <x-add-anime-modal :anime="$anime" />
+                                            </td>
+                                            <td>{{ Str::limit($anime->synopsis, 50) }}</td>
+                                            <td><img src="{{ $anime->image_url }}" width="50"></td>
+                                            <td>{{ $anime->episodes }}</td>
+                                            <td>{{ $anime->status }}</td>
+                                            <td>{{ $anime->airing ? 'Si' : 'No' }}</td>
+                                            <td>{{ $anime->rating }}</td>
+                                            <td>{{ $anime->score }}</td>
+                                            <td>{{ $anime->year }}</td>
+                                            <td><a href="{{ route('animes.show', $anime->id) }}"
+                                                    class="btn btn-sm btn-primary">Dettagli</a></td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
 
                         <!-- Pagination -->

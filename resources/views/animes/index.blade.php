@@ -9,7 +9,6 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>MAL ID</th>
                         <th>Titolo</th>
                         <th>Sinossi</th>
@@ -26,9 +25,10 @@
                 <tbody>
                     @foreach ($animeData as $anime)
                         <tr>
-                            <td>{{ $anime->id }}</td>
                             <td>{{ $anime->mal_id }}</td>
-                            <td>{{ $anime->title }}</td>
+                            <td>
+                                <x-add-anime-modal :anime="$anime" />
+                            </td>
                             <td>{{ Str::limit($anime->synopsis, 50) }}</td>
                             <td><img src="{{ $anime->image_url }}" width="50"></td>
                             <td>{{ $anime->episodes }}</td>
@@ -103,7 +103,7 @@
                         value="{{ $animeData->currentPage() }}"
                         class="w-20 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <button type="submit"
-                        class="px-4 py-2 bg-blue-600 text-green rounded-md hover:bg-blue-700 transition">Vai</button>
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">Vai</button>
                 </form>
             </div>
         </div>
