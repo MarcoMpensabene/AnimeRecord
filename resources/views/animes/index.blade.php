@@ -5,39 +5,43 @@
 @section('content')
     <div class="max-w-7xl mx-auto py-10">
         <h1 class="text-3xl font-bold mb-6">Lista degli Anime</h1>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
+        <div class="overflow-x-auto p-4">
+            <table class="w-full text-sm text-left text-green-300 border-collapse border border-gray-700">
+                <thead class="bg-blue-400 text-black">
                     <tr>
-                        <th>MAL ID</th>
-                        <th>Titolo</th>
-                        <th>Sinossi</th>
-                        <th>Immagine</th>
-                        <th>Episodi</th>
-                        <th>Status</th>
-                        <th>In corso</th>
-                        <th>Rating</th>
-                        <th>Score</th>
-                        <th>Anno</th>
-                        <th>Azioni</th>
+                        <th class="p-2 border border-gray-700">MAL ID</th>
+                        <th class="p-2 border border-gray-700">Titolo</th>
+                        <th class="p-2 border border-gray-700">Sinossi</th>
+                        <th class="p-2 border border-gray-700">Immagine</th>
+                        <th class="p-2 border border-gray-700">Episodi</th>
+                        <th class="p-2 border border-gray-700">Status</th>
+                        <th class="p-2 border border-gray-700">In corso</th>
+                        <th class="p-2 border border-gray-700">Rating</th>
+                        <th class="p-2 border border-gray-700">Score</th>
+                        <th class="p-2 border border-gray-700">Anno</th>
+                        <th class="p-2 border border-gray-700">Azioni</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($animeData as $anime)
-                        <tr>
-                            <td>{{ $anime->mal_id }}</td>
-                            <td>
+                        <tr class="bg-gray-600 hover:bg-gray-700 transition">
+                            <td class="p-2 border border-gray-700">{{ $anime->mal_id }}</td>
+                            <td class="p-2 border border-gray-700 font-bold text-red-900 ">
                                 <x-add-anime-modal :anime="$anime" />
                             </td>
-                            <td>{{ Str::limit($anime->synopsis, 50) }}</td>
-                            <td><img src="{{ $anime->image_url }}" width="50"></td>
-                            <td>{{ $anime->episodes }}</td>
-                            <td>{{ $anime->status }}</td>
-                            <td>{{ $anime->airing ? 'Si' : 'No' }}</td>
-                            <td>{{ $anime->rating }}</td>
-                            <td>{{ $anime->score }}</td>
-                            <td>{{ $anime->year }}</td>
-                            <td><a href="{{ route('animes.show', $anime->id) }}" class="btn btn-sm btn-primary">Dettagli</a>
+                            <td class="p-2 border border-gray-700">{{ Str::limit($anime->synopsis, 50) }}</td>
+                            <td class="p-2 border border-gray-700">
+                                <img src="{{ $anime->image_url }}" width="50" class="rounded-md">
+                            </td>
+                            <td class="p-2 border border-gray-700">{{ $anime->episodes }}</td>
+                            <td class="p-2 border border-gray-700">{{ $anime->status }}</td>
+                            <td class="p-2 border border-gray-700">{{ $anime->airing ? 'Si' : 'No' }}</td>
+                            <td class="p-2 border border-gray-700">{{ $anime->rating }}</td>
+                            <td class="p-2 border border-gray-700">{{ $anime->score }}</td>
+                            <td class="p-2 border border-gray-700">{{ $anime->year }}</td>
+                            <td class="p-2 border border-gray-700">
+                                <a href="{{ route('animes.show', $anime->id) }}"
+                                    class="px-3 py-1 bg-blue-600 text-white rounded-md text-xs hover:bg-blue-500 transition">Dettagli</a>
                             </td>
                         </tr>
                     @endforeach

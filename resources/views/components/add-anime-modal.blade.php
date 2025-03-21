@@ -2,7 +2,7 @@
 
 <div x-data="{ open: false }" class="relative z-50">
     <!-- Trigger Button -->
-    <button type="button" @click="open = true" class="text-blue-600 hover:text-blue-800 cursor-pointer">
+    <button type="button" @click="open = true" class="text-green-600 hover:text-yellow-500 cursor-pointer">
         {{ $anime->title }}
     </button>
 
