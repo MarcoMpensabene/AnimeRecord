@@ -229,8 +229,10 @@ class AnimeController extends Controller
             }
 
             // Filter by genre if provided
-            if ($request->has('genre') && $request->genre !== '') {
-                $query->where('genres', 'like', '%' . $request->genre . '%');
+            if ($request->has('genre') && is_array($request->genre)) {
+                foreach ($request->genre as $genre) {
+                    $query->whereJsonContains('genres', $genre);
+                }
             }
 
             $perPage = 10;
