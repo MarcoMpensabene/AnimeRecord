@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 
-<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white flex flex-col items-center min-h-screen">
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white flex flex-col items-center min-h-screen"
+    style="background-image: url('https://itsaboutanime.wordpress.com/wp-content/uploads/2019/12/4k-anime-wallpapers-top-free-4k-anime-backgrounds.jpg');">
     <header class="w-full p-4 flex justify-between items-center bg-white dark:bg-gray-800 shadow">
         <h1 class="text-xl font-bold">AnimeRecord</h1>
         <a href="{{ route('animes.index') }}"
@@ -43,32 +44,35 @@
     </header>
 
     <main class="flex flex-col items-center justify-center flex-1 text-center p-6">
-        <h2 class="text-3xl font-bold mb-4">Welcome to AnimeRecord</h2>
-        <p class="text-lg text-gray-600 dark:text-gray-300 mb-6">Track, rate, and discover anime with ease.</p>
+        <div class="w-full max-w-7xl p-4 bg-white bg-opacity-90 rounded-lg shadow-lg">
+            <h2 class="text-3xl font-bold mb-4">Welcome to AnimeRecord</h2>
+            <p class="text-lg text-gray-600 dark:text-gray-300 mb-6">Track, rate, and discover anime with ease.</p>
 
-        <!-- Seasonal Anime Carousel -->
-        <div class="w-full max-w-4xl mb-8">
-            <h3 class="text-2xl font-bold mb-4">Current Season Anime</h3>
-            <div class="relative px-16">
-                <div class="swiper seasonal-anime-swiper">
-                    <div class="swiper-wrapper" id="seasonal-anime-container">
-                        <!-- Anime cards will be inserted here -->
-                    </div>
-                    <div class="swiper-pagination"></div>
-                    <div
-                        class="swiper-button-next !w-10 !h-10 !bg-white !rounded-full !shadow-md !text-indigo-600 hover:!bg-gray-50">
-                    </div>
-                    <div
-                        class="swiper-button-prev !w-10 !h-10 !bg-white !rounded-full !shadow-md !text-indigo-600 hover:!bg-gray-50">
+            <!-- Seasonal Anime Carousel -->
+            <div class="w-full max-w-4xl mb-8">
+                <h3 class="text-2xl font-bold mb-4">Current Season Anime</h3>
+                <div class="relative px-16">
+                    <div class="swiper seasonal-anime-swiper">
+                        <div class="swiper-wrapper" id="seasonal-anime-container">
+                            <!-- Anime cards will be inserted here -->
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div
+                            class="swiper-button-next !w-10 !h-10 !bg-white !rounded-full !shadow-md !text-indigo-600 hover:!bg-gray-50">
+                        </div>
+                        <div
+                            class="swiper-button-prev !w-10 !h-10 !bg-white !rounded-full !shadow-md !text-indigo-600 hover:!bg-gray-50">
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <a href="{{ route('register') }}"
-            class="px-6 py-3 bg-indigo-600 text-white rounded-lg text-lg hover:bg-indigo-700">
-            Get Started
-        </a>
+            <a href="{{ route('register') }}"
+                class="px-6 py-3 bg-indigo-600 text-white rounded-lg text-lg hover:bg-indigo-700">
+                Get Started
+            </a>
+
+        </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
